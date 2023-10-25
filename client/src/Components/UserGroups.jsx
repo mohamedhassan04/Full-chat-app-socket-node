@@ -1,12 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserGroups = () => {
+  const [refresh, setRefresh] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const theme = useSelector((state) => state.themeKey);
+  const [users, setUsers] = useState([]);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const navigate = useNavigate();
+
+  if (!userData) {
+    console.log("User Not Authenticated");
+    navigate(-1);
+  }
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userData?.data?.token}`,
+      },
+    };
+
+    const fetchUsers = () => {
+      axios
+        .get(
+          `http://localhost:8080/user/fetchUsers?search=${searchTerm}`,
+          config
+        )
+        .then((data) => {
+          setUsers(data.data);
+        });
+    };
+
+    fetchUsers(); // Initial fetch without search term
+  }, [refresh, searchTerm]);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -31,65 +66,38 @@ const UserGroups = () => {
           <IconButton>
             <SearchIcon />
           </IconButton>
-          <input type="text" placeholder="Search..." className="search-box" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="search-box"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         <div className="ug-list">
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="list-tem"
-          >
-            <p className="con-icon">T</p>
-            <p className="con-title">Test User</p>
-          </motion.div>
+          {users.map((user, index) => {
+            return (
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className="list-tem"
+                key={index}
+                // onClick={() => {
+                //   const config = {
+                //     headers: {
+                //       Authorization: `Bearer ${userData?.data?.token}`,
+                //     },
+                //   };
+                //   // axios.post("http://localhost:8080/chat", {
+                //   //   userId: user._id,
+                //   // }),
+                //   config;
+                // }}
+              >
+                <p className="con-icon">{user.name[0]}</p>
+                <p className="con-title">{user.name}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
     </AnimatePresence>

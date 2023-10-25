@@ -1,8 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Welcome = () => {
   const user = JSON.parse(localStorage.getItem("userData"));
   const userProps = user?.data?.name;
+
+  const navigate = useNavigate();
+
+  if (!user) {
+    navigate("/");
+  }
   return (
     <div className="welcome-container">
       <img

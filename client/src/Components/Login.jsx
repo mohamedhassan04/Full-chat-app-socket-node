@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Backdrop, Button, CircularProgress, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Toaster from "./Toaster";
 
 const Login = () => {
   const [data, setData] = useState({ name: "", password: "" });
@@ -75,6 +76,9 @@ const Login = () => {
             If you don't have an account please register here
             <Link to={"register"}>Sign up</Link>
           </h4>
+          {loginInStatus ? (
+            <Toaster key={loginInStatus.key} message={loginInStatus.msg} />
+          ) : null}
         </div>
       </div>
     </>

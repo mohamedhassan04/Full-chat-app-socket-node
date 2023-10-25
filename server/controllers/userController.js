@@ -32,13 +32,13 @@ const registerController = expressAsyncHandler(async (req, res) => {
 
   const userExist = await UserModel.findOne({ email });
   if (userExist) {
-    res.status(400);
+    res.status(405);
     throw new Error("User already exist");
   }
 
   const userNameExist = await UserModel.findOne({ name });
   if (userNameExist) {
-    res.status(400);
+    res.status(406);
     throw new Error("This user name already exist");
   }
 
@@ -73,10 +73,12 @@ const fetchAllUsersController = expressAsyncHandler(async (req, res) => {
       }
     : {};
 
-  const users = await UserModel.find(keyword).find({
-    //$ne is applied to ensure that the currently authenticated is not included in the search results
-    _id: { $ne: req.user._id },
-  });
+  const users = await UserModel.find(keyword)
+    .find({
+      //$ne is applied to ensure that the currently authenticated is not included in the search results
+      _id: { $ne: req.user._id },
+    })
+    .select("-password");
   res.send(users);
 });
 
