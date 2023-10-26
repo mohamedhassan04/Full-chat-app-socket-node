@@ -109,9 +109,7 @@ const createGroupeChat = asyncHandler(async (req, res) => {
 
 const groupExit = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
-
   // check if the requester is admin
-
   const removed = await chatModel
     .findByIdAndUpdate(
       chatId,
@@ -133,10 +131,35 @@ const groupExit = asyncHandler(async (req, res) => {
   }
 });
 
+const addSelfGroup = asyncHandler(async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  const added = await chatModel
+    .findByIdAndUpdate(
+      chatId,
+      {
+        $push: { users: userId },
+      },
+      {
+        new: true,
+      }
+    )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+
+  if (!added) {
+    res.status(404);
+    throw new Error("Chat Not Found");
+  } else {
+    res.json(added);
+  }
+});
+
 module.exports = {
   accessChat,
   fetchChats,
   fetchGroups,
   createGroupeChat,
   groupExit,
+  addSelfGroup,
 };

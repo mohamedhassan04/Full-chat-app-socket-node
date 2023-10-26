@@ -2,6 +2,7 @@ console.clear();
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
+app.use("/message", messageRoutes);
 
 const PORT = process.env.PORT || 5000;
 
