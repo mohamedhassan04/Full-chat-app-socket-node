@@ -1,6 +1,8 @@
 console.clear();
 const express = require("express");
 const userRoutes = require("./routes/userRoutes");
+const chatRoutes = require("./routes/chatRoutes");
+
 const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDb = require("./db_config/dbConfig");
@@ -17,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/chat", chatRoutes);
 
 const PORT = process.env.PORT || 5000;
 
