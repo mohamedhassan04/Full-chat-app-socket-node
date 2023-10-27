@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { refreshSidebarFun } from "../Redux/refreshSideBar";
 import axios from "axios";
 
 const UserGroups = () => {
+  const dispatch = useDispatch();
   const [refresh, setRefresh] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const theme = useSelector((state) => state.themeKey);
@@ -81,17 +83,21 @@ const UserGroups = () => {
                 whileTap={{ scale: 0.98 }}
                 className="list-tem"
                 key={index}
-                // onClick={() => {
-                //   const config = {
-                //     headers: {
-                //       Authorization: `Bearer ${userData?.data?.token}`,
-                //     },
-                //   };
-                //   // axios.post("http://localhost:8080/chat", {
-                //   //   userId: user._id,
-                //   // }),
-                //   config;
-                // }}
+                onClick={() => {
+                  const config = {
+                    headers: {
+                      Authorization: `Bearer ${userData?.data?.token}`,
+                    },
+                  };
+                  axios.post(
+                    "http://localhost:8080/chat",
+                    {
+                      userId: user._id,
+                    },
+                    config
+                  );
+                  dispatch(refreshSidebarFun());
+                }}
               >
                 <p className="con-icon">{user.name[0]}</p>
                 <p className="con-title">{user.name}</p>
