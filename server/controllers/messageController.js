@@ -6,11 +6,10 @@ const chatModel = require("../models/messageModel");
 const allMessages = expressAsyncHandler(async (req, res) => {
   try {
     const messages = await messageModel
-      .find({ chat: req.params.chatId })
+      .find({ chatId: req.params.chatId })
       .populate("sender", "name email")
       .populate("receiver")
-      .populate("chat");
-
+      .populate("chatId");
     res.json(messages);
   } catch (error) {
     res.status(400);
@@ -35,8 +34,8 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     var message = await messageModel.create(newMessage);
 
     message = await message.populate("sender", "name pic");
-    message = await message.populate("chat");
-    message = await message.populate("reciever");
+    message = await message.populate("chatId");
+    message = await message.populate("receiver");
     message = await userModel.populate(message, {
       path: "chat.users",
       select: "name email",

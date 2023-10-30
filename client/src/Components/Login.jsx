@@ -58,12 +58,22 @@ const Login = () => {
           <p className="login-text">Login to you Account</p>
           <TextField
             onChange={(e) => setData({ ...data, name: e.target.value })}
+            onKeyDown={(event) => {
+              if (event.code == "Enter") {
+                loginHandler();
+              }
+            }}
             id="standard-basic"
             label="Enter Your User Name"
             variant="outlined"
           />
           <TextField
             onChange={(e) => setData({ ...data, password: e.target.value })}
+            onKeyDown={(event) => {
+              if (event.code == "Enter") {
+                loginHandler();
+              }
+            }}
             id="standard-basic"
             label="Enter Your Password"
             type="password"
