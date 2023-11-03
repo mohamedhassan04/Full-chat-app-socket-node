@@ -7,6 +7,11 @@ import MessageOther from "./MessageOther";
 import MessageSelf from "./MessageSelf";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:8080";
+
+var socket, chat;
 
 const ChatArea = () => {
   const [messageContent, setMessageContent] = useState("");
@@ -15,12 +20,12 @@ const ChatArea = () => {
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [allMessages, setAllMessages] = useState([]);
   const [allMessagesCopy, setAllMessagesCopy] = useState([]);
-
-  console.log(allMessages);
+  const [socketConnectionStatus, setSocketConnectionStatus] = useState(false);
 
   const [loaded, setLoaded] = useState(false);
 
   const sendMessage = () => {
+    var data = null;
     const config = {
       headers: {
         Authorization: `Bearer ${userData.data.token}`,
@@ -35,10 +40,32 @@ const ChatArea = () => {
         },
         config
       )
-      .then(({ data }) => {
-        console.log(data);
+      .then(({ response }) => {
+        data = response;
+        console.log("message fired");
       });
+    socket.emit("newMessage", data);
   };
+
+  // connect to socket
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", userData);
+    socket.on("connection", () => {
+      setSocketConnectionStatus(!socketConnectionStatus);
+    });
+  }, []);
+
+  // new message received
+  useEffect(() => {
+    socket.on("message received", (newMessage) => {
+      if (!allMessagesCopy || allMessagesCopy._id !== newMessage._id) {
+        // setAllMessages([...allMessages], newMessage)
+      } else {
+        setAllMessages([...allMessages], newMessage);
+      }
+    });
+  }, []);
 
   //fetch Chats
   useEffect(() => {
@@ -50,13 +77,12 @@ const ChatArea = () => {
     axios
       .get("http://localhost:8080/message/" + chat_id, config)
       .then(({ data }) => {
-        console.log(data);
         setAllMessages(data);
         setLoaded(true);
-        // socket.emit('join chat',chat_id)
+        socket.emit("join chat", chat_id);
       });
     setAllMessagesCopy(allMessages);
-  }, [chat_id, userData.data.token]);
+  }, [chat_id, userData.data.token, allMessages]);
 
   return (
     <div className="chatarea-container">
