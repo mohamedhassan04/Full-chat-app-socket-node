@@ -99,9 +99,8 @@ const ChatArea = () => {
       <div className="messages-container">
         {allMessages
           .slice(0)
-          .reverse()
+          // .reverse()
           .map((message, index) => {
-            console.log(message);
             const sender = message.sender;
             const self_id = userData.data._id;
             if (sender._id === self_id) {

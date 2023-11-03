@@ -32,7 +32,7 @@ const SideBar = () => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    axios.get("http://localhost:8080/chat", config).then((response) => {
+    axios.get("http://localhost:8080/chat/", config).then((response) => {
       setConversation(response.data);
     });
   }, []);
@@ -157,7 +157,7 @@ const SideBar = () => {
                 </p>
 
                 <p className="con-lastMessage">
-                  {conversation.latestMessage.content}
+                  {conversation?.latestMessage?.content}
                 </p>
                 {/* <p className={"con-timeStamp" + (lightTheme ? "" : " dark")}>
                 {conversation.timeStamp}
