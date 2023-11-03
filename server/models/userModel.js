@@ -31,7 +31,6 @@ userModel.pre("save", async function (next) {
     next();
   }
   const salt = await bcrypt.genSalt(10);
-  console.log(this.password);
   this.password = await bcrypt.hash(this.password, salt);
 });
 

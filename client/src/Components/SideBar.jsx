@@ -98,6 +98,16 @@ const SideBar = () => {
       </div>
       <div className={"sb-conversations" + (theme ? "" : " dark")}>
         {conversation.map((conversation, index) => {
+          var chatName = "";
+          if (conversation.isGroupChat) {
+            chatName = conversation.chatName;
+          } else {
+            conversation.users.map((user) => {
+              if (user._id != userData.data._id) {
+                chatName = user.name;
+              }
+            });
+          }
           // console.log("current convo : ", conversation);
           if (conversation.users.length === 1) {
             return <div key={index}></div>;
@@ -110,20 +120,15 @@ const SideBar = () => {
                   key={index}
                   className="conversation-container"
                   onClick={() => {
-                    navigate(
-                      "chat/" +
-                        conversation._id +
-                        "&" +
-                        conversation.users[1].name
-                    );
+                    navigate("chat/" + conversation._id + "&" + chatName);
                   }}
                   // dispatch change to refresh so as to update chatArea
                 >
                   <p className={"con-icon" + (theme ? "" : " dark")}>
-                    {conversation.users[1].name[0]}
+                    {chatName[0]}
                   </p>
                   <p className={"con-title" + (theme ? "" : " dark")}>
-                    {conversation.users[1].name}
+                    {chatName}
                   </p>
 
                   <p className="con-lastMessage">
@@ -141,19 +146,14 @@ const SideBar = () => {
                 key={index}
                 className="conversation-container"
                 onClick={() => {
-                  navigate(
-                    "chat/" +
-                      conversation._id +
-                      "&" +
-                      conversation.users[1].name
-                  );
+                  navigate("chat/" + conversation._id + "&" + chatName);
                 }}
               >
                 <p className={"con-icon" + (theme ? "" : " dark")}>
-                  {conversation.users[1].name[0]}
+                  {chatName[0]}
                 </p>
                 <p className={"con-title" + (theme ? "" : " dark")}>
-                  {conversation.users[1].name}
+                  {chatName}
                 </p>
 
                 <p className="con-lastMessage">
