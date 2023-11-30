@@ -102,8 +102,12 @@ const SideBar = () => {
           if (conversation.users.length === 1) {
             return <div key={index}></div>;
           }
+          const userFilter = conversation.users.filter((item) => {
+            return item._id != user._id;
+          });
+
           if (conversation.latestMessage === undefined) {
-            // console.log("No Latest Message with ", conversation.users[1]);
+            console.log("No Latest Message with ", conversation);
             return (
               <div key={index}>
                 <div
@@ -111,19 +115,16 @@ const SideBar = () => {
                   className="conversation-container"
                   onClick={() => {
                     navigate(
-                      "chat/" +
-                        conversation._id +
-                        "&" +
-                        conversation.users[1].name
+                      "chat/" + conversation._id + "&" + userFilter[0].name
                     );
                   }}
                   // dispatch change to refresh so as to update chatArea
                 >
                   <p className={"con-icon" + (theme ? "" : " dark")}>
-                    {conversation.users[1].name[0]}
+                    {userFilter[0].name[0]}
                   </p>
                   <p className={"con-title" + (theme ? "" : " dark")}>
-                    {conversation.users[1].name}
+                    {userFilter[0].name}
                   </p>
 
                   <p className="con-lastMessage">
@@ -142,18 +143,15 @@ const SideBar = () => {
                 className="conversation-container"
                 onClick={() => {
                   navigate(
-                    "chat/" +
-                      conversation._id +
-                      "&" +
-                      conversation.users[1].name
+                    "chat/" + conversation._id + "&" + userFilter[0].name
                   );
                 }}
               >
                 <p className={"con-icon" + (theme ? "" : " dark")}>
-                  {conversation.users[1].name[0]}
+                  {userFilter[0].name[0]}
                 </p>
                 <p className={"con-title" + (theme ? "" : " dark")}>
-                  {conversation.users[1].name}
+                  {userFilter[0].name}
                 </p>
 
                 <p className="con-lastMessage">

@@ -6,6 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 import MessageOther from "./MessageOther";
 import MessageSelf from "./MessageSelf";
 import { useParams } from "react-router-dom";
+import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import axios from "axios";
 import io from "socket.io-client";
 
@@ -126,13 +127,19 @@ const ChatArea = () => {
             }
           }}
         />
-        <IconButton
-          onClick={() => {
-            sendMessage();
-          }}
-        >
-          <SendIcon />
-        </IconButton>
+        <div>
+          <IconButton>
+            <SentimentSatisfiedOutlinedIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={() => {
+              sendMessage();
+            }}
+          >
+            <SendIcon />
+          </IconButton>
+        </div>
       </div>
     </div>
   );
