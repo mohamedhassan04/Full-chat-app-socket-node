@@ -98,6 +98,16 @@ const SideBar = () => {
       </div>
       <div className={"sb-conversations" + (theme ? "" : " dark")}>
         {conversation.map((conversation, index) => {
+          var chatName = "";
+          if (conversation.isGroupChat) {
+            chatName = conversation.chatName;
+          } else {
+            conversation.users.map((user) => {
+              if (user._id != userData.data._id) {
+                chatName = user.name;
+              }
+            });
+          }
           // console.log("current convo : ", conversation);
           if (conversation.users.length === 1) {
             return <div key={index}></div>;
